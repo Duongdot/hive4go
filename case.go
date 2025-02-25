@@ -67,7 +67,7 @@ type HiveCaseRespMulti struct {
 // 	6. tags []string
 // 	7. flag bool
 // Returns HiveCase struct and response error
-func (hive *Hivedata) CreateCase(title string, description string, tlp int, severity int, tasks []CaseTask, tags []string, flag bool) (*HiveCase, error) {
+func (hive *Hivedata) CreateCase(title string, description string, tlp int, severity int, tasks []CaseTask, tags []string, flag bool, customFields map[string]interface{}) (*HiveCase, error) {
 	var curcase HiveCase
 	var url string
 
@@ -90,6 +90,7 @@ func (hive *Hivedata) CreateCase(title string, description string, tlp int, seve
 		Tags:        tags,
 		Tasks:       tasks,
 		Flag:        flag,
+		CustomFields: customFields,
 	}
 
 	// Encodes struct as json
