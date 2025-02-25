@@ -20,7 +20,7 @@ type HiveCase struct {
 	Status       string                 `json:"status,omitempty"`
 	Id           string                 `json:"id,omitempty"`
 	Owner        string                 `json:"owner,omitempty"`
-	CustomFields map[string]interface{} `json:"customFields"`
+	CustomFields map[string]interface{} `json:"customFields,omitempty"`
 	Raw          []byte                 `json:"-"`
 }
 
@@ -81,26 +81,24 @@ func (hive *Hivedata) CreateCase(title string, description string, tlp int, seve
 		description = ""
 	}
 
-	// Creates case struct for json usage
+	// Tạo case với customFields
 	curcase = HiveCase{
-		Title:       title,
-		Description: description,
-		Tlp:         tlp,
-		Severity:    severity,
-		Tags:        tags,
-		Tasks:       tasks,
-		Flag:        flag,
-		CustomFields: customFields,
+		Title:        title,
+		Description:  description,
+		Tlp:          tlp,
+		Severity:     severity,
+		Tags:         tags,
+		Tasks:        tasks,
+		Flag:         flag,
+		CustomFields: customFields, // THÊM customFields vào payload
 	}
 
-	// Encodes struct as json
+	// Chuyển thành JSON
 	jsondata, err := json.Marshal(curcase)
-
 	if err != nil {
 		return nil, err
 	}
 
-	// FIX - might point to same memory, so make a duplicate without editing
 	hive.Ro.RequestBody = bytes.NewReader(jsondata)
 
 	url = fmt.Sprintf("%s%s", hive.Url, "/api/case")
