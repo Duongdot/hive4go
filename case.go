@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	"github.com/levigross/grequests"
 )
 
@@ -62,12 +63,13 @@ type HiveCaseRespMulti struct {
 //  1. title string
 //  2. description string
 //  3. tlp int
-// 	4. severity int
-// 	5. tasks []CaseTask
-// 	6. tags []string
-// 	7. flag bool
+//  4. severity int
+//  5. tasks []CaseTask
+//  6. tags []string
+//  7. flag bool
+//
 // Returns HiveCase struct and response error
-func (hive *Hivedata) CreateCase(title string, description string, tlp int, severity int, tags []string, flag bool) (*HiveCase, error) {
+func (hive *Hivedata) CreateCase(title string, description string, tlp int, severity int, tags []string, flag bool, tasks []CaseTask) (*HiveCase, error) {
 	var curcase HiveCase
 	var url string
 
@@ -83,12 +85,13 @@ func (hive *Hivedata) CreateCase(title string, description string, tlp int, seve
 
 	// Tạo case với customFields
 	curcase = HiveCase{
-		Title:        title,
-		Description:  description,
-		Tlp:          tlp,
-		Severity:     severity,
-		Tags:         tags,
-		Flag:         flag,
+		Title:       title,
+		Description: description,
+		Tlp:         tlp,
+		Severity:    severity,
+		Tags:        tags,
+		Flag:        flag,
+		Tasks:       tasks,
 	}
 
 	// Chuyển thành JSON
@@ -114,10 +117,11 @@ func (hive *Hivedata) CreateCase(title string, description string, tlp int, seve
 //  1. title string
 //  2. description string
 //  3. tlp int
-// 	4. severity int
-// 	5. tasks []CaseTask
-// 	6. tags []string
-// 	7. flag bool
+//  4. severity int
+//  5. tasks []CaseTask
+//  6. tags []string
+//  7. flag bool
+//
 // Returns HiveCase struct and response error
 func (hive *Hivedata) GetCase(case_id string) (*HiveCaseResp, error) {
 	var url, urlpath string
@@ -137,6 +141,7 @@ func (hive *Hivedata) GetCase(case_id string) (*HiveCaseResp, error) {
 // Finds all cases based on search parameter
 // Takes one argument
 //  1. search []byte defined as a marshalled json string
+//
 // FIX - Missing sort and range, can use struct
 func (hive *Hivedata) FindCases(search []byte) (*HiveCaseRespMulti, error) {
 	var url = fmt.Sprintf("%s%s", hive.Url, "/api/case/_search?sort=%2Btlp&range=all")
@@ -157,6 +162,7 @@ func (hive *Hivedata) FindCases(search []byte) (*HiveCaseRespMulti, error) {
 //  1. caseId string
 //  2. name string
 //  3. data string
+//
 // Returns CaseTaskLogresponse struct and response error
 // FIX - only supports string currently
 func (hive *Hivedata) AddCustomFieldData(caseId string, name string, data string) (*HiveCase, error) {

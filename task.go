@@ -4,17 +4,32 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	"github.com/levigross/grequests"
 )
 
 // Stores a hive task
+//
+//	type CaseTask struct {
+//		Title       string `json:"title"`
+//		Status      string `json:"status"`
+//		Owner       string `json:"owner"`
+//		Description string `json:"description"`
+//		Flag        bool   `json:"flag"`
+//		Raw         []byte `json:"-"`
+//	}
 type CaseTask struct {
-	Title       string `json:"title"`
-	Status      string `json:"status"`
-	Owner       string `json:"owner"`
-	Description string `json:"description"`
-	Flag        bool   `json:"flag"`
-	Raw         []byte `json:"-"`
+	Title       string `json:"title"`                 // Bắt buộc, 1 - 128 ký tự
+	Group       string `json:"group,omitempty"`       // 1 - 64 ký tự
+	Description string `json:"description,omitempty"` // <= 1,048,576 ký tự
+	Status      string `json:"status,omitempty"`      // 1 - 16 ký tự
+	Flag        bool   `json:"flag"`                  // true/false
+	StartDate   int64  `json:"startDate,omitempty"`   // Timestamp (ms)
+	EndDate     int64  `json:"endDate,omitempty"`     // Timestamp (ms)
+	Order       int    `json:"order,omitempty"`       // int32
+	DueDate     int64  `json:"dueDate,omitempty"`     // Timestamp (ms)
+	Assignee    string `json:"assignee,omitempty"`    // 1 - 128 ký tự
+	Mandatory   bool   `json:"mandatory,omitempty"`   // true/false
 }
 
 // Stores multiple tasks from searches
@@ -81,6 +96,7 @@ type CaseTaskLogRespMulti struct {
 // Takes two parameters:
 //  1. taskId string
 //  2. taskLog CaseTaskLog
+//
 // Returns CaseTaskLogresponse struct and response error
 func (hive *Hivedata) CreateTaskLog(taskId string, taskLog CaseTaskLog) (*CaseTaskLogResponse, error) {
 	var url string
@@ -193,6 +209,7 @@ func (hive *Hivedata) GetCaseTasks(caseId string) (*CaseTaskRespMulti, error) {
 // Takes two parameters:
 //  1. caseId string
 //  2. casetask CaseTask
+//
 // Returns CaseTask struct and response error
 func (hive *Hivedata) CreateCaseTask(caseId string, casetask CaseTask) (*CaseTaskResponse, error) {
 	var url string
@@ -220,6 +237,7 @@ func (hive *Hivedata) CreateCaseTask(caseId string, casetask CaseTask) (*CaseTas
 // Defines how to get  a taskwithin a case
 // Takes one parameters:
 //  1. taskId string
+//
 // Returns CaseTaskResponse struct and response error
 func (hive *Hivedata) GetTask(taskId string) (*CaseTaskResponse, error) {
 	var url, urlpath string
