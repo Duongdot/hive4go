@@ -8,11 +8,11 @@ This is made based on my own needs, and might be missing some specific functiona
 
 # Install
 ```Bash
-go get github.com/frikky/hive4go
+go get github.com/Duongdot/hive4go
 ```
 
 ```Go
-import "github.com/frikky/hive4go"
+import "github.com/Duongdot/hive4go"
 ```
 
 # Create case example
